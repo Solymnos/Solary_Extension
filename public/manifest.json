@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "short_name": "Solary Live",
+  "name": "Solary Live Extension",
+  "author" : "Solymnos",
+  "version" : "1.0.1",
+  "description" : "Savoir quel membre de Solary est actuellement en live",
+  "action": {
+    "default_icon": "./Logo_Solary.png",
+    "default_popup" : "index.html"
+  }
+}

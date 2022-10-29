@@ -4,7 +4,7 @@ import StreamLive from './StreamLive';
 
 const secretId = process.env.REACT_APP_API_KEY;
 const clientId = '7cfkyio9tmesj095ka74h05tcli9tw';
-const streamsID = [174955366, 103762288, 38284441, 140605154, 267811181, 39194732, 50977632, 103490313, 52616898, 113511896, 413138671, 198506129, 416031592];
+const streamsID = [174955366, 103762288, 38284441, 140605154, 267811181, 39194732, 50977632, 103490313, 52616898, 113511896, 413138671, 198506129, 416031592, 21776474, 63675549, 78705692, 44784857, 412354630, 60408047, 107220879, 116205779, 60572036, 23264711, 107734513];
 let token;
 
 const App = () => {
@@ -60,7 +60,7 @@ const App = () => {
         {
             let url = `https://api.twitch.tv/helix/streams`;
             token = await getToken();
-        
+
             for (const [i, streamID] of streamsID.entries())
             {
                 if (i === 0)

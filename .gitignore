@@ -24,3 +24,4 @@ yarn-error.log*
 
 /OldFiles
 .env
+build.zip

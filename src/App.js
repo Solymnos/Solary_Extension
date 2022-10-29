@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import StreamLive from './StreamLive';
 
-const secretId = 'ot1b7gq6gyjk4blohl83qnbcfoigoy';
+const secretId = process.env.REACT_APP_API_KEY;
 const clientId = '7cfkyio9tmesj095ka74h05tcli9tw';
 const streamsID = [174955366, 103762288, 38284441, 140605154, 267811181, 39194732, 50977632, 103490313, 52616898, 113511896, 413138671, 198506129, 416031592];
 let token;

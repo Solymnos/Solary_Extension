@@ -47,40 +47,41 @@ const App = () => {
     const getPP = (stream) =>
     {
         console.log(listProfilePics);
-        const userData = listProfilePics.find(element => element.id == stream.user_id)
+        const userData = listProfilePics.find(element => element.id === stream.user_id)
         console.log(userData)
         console.log(userData.pp)
         return userData.pp;
     }
 
-    const getStreamsOnline = async() =>
-    {
-        let url = `https://api.twitch.tv/helix/streams`;
-        token = await getToken();
-
-        for (const [i, streamID] of streamsID.entries())
-        {
-            if (i === 0)
-            {
-                url += '?';
-                url += `user_id=${streamID}`;
-            } else {
-                url += '&';
-                url += `user_id=${streamID}`;
-            }
-        }
-        let response = await fetch(url, { headers : {'Authorization' : `Bearer ${token}`, 'Client-Id' : clientId}});
-        let data = await response.json();
-        console.log(data.data);
-        setStreamsOnline(data.data);
-        loadProfilePictures(data.data);
-    }
+    
 
     useEffect(() => {
+        const getStreamsOnline = async() =>
+        {
+            let url = `https://api.twitch.tv/helix/streams`;
+            token = await getToken();
+        
+            for (const [i, streamID] of streamsID.entries())
+            {
+                if (i === 0)
+                {
+                    url += '?';
+                    url += `user_id=${streamID}`;
+                } else {
+                    url += '&';
+                    url += `user_id=${streamID}`;
+                }
+            }
+            let response = await fetch(url, { headers : {'Authorization' : `Bearer ${token}`, 'Client-Id' : clientId}});
+            let data = await response.json();
+            console.log(data.data);
+            setStreamsOnline(data.data);
+            loadProfilePictures(data.data);
+        }
         getStreamsOnline();
     }, []);
 
-    if (isReady == false)
+    if (isReady === false)
     {
         return null;
     }

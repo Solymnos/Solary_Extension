@@ -1,44 +1,56 @@
-//https://youtu.be/O87hWNxiQ5w?t=870
 import { useEffect, useState } from 'react';
 import './App.css';
-import StreamLive from './components/StreamLive';
-import { getToken, getLivesInfos, getStreamersInfos, getStreamerProfilePic } from './utils/twitchUtils';
+import { getLivesInfos, getStreamersInfos, getStreamerProfilePic } from './utils/twitchUtils';
+import { useSelector } from 'react-redux';
+import LoadingScreen from './components/LoadingScreen';
 import LogginTwitch from './components/LoggingTwitch';
+import StreamLive from './components/StreamLive';
+import Header from './components/Header';
 
 const App = () => 
 {
     const [ streamsOnLine, setStreamsOnline ] = useState([]);
     const [ isReady, setIsReady ] = useState(false);
-    const [ isLog, setIsLog ] = useState(false);
+    const statusData = useSelector((state) => state.status.status);
 
     useEffect(() => 
     {
         const loadInfos = async() =>
         {
-            var token = await getToken();
-            var streams = await getLivesInfos(token);
-            setStreamsOnline(streams);
-            await getStreamersInfos(token, streams);
-            setIsReady(true);
+            if (statusData !== 'NOT_LOG_ON_TWITCH')
+            {
+                var token = localStorage.getItem('token');
+                var streams = await getLivesInfos(token);
+                setStreamsOnline(streams);
+                await getStreamersInfos(token, streams);
+                setIsReady(true);
+            }
         }
         loadInfos();
-    }, [])
+    }, [statusData])
 
-    if (isLog === false)
+    if (statusData === 'NOT_LOG_ON_TWITCH')
     {
         return (
             <div className='app'>
+                <Header />
                 <LogginTwitch />
             </div>
         )
     }
     if (isReady === false)
     {
-        return null;
+        return (
+            <div className='app'>
+                <Header />
+                <LoadingScreen />
+            </div>
+        )
     }
 
     return (
         <div className='app'>
+            <Header />
             { 
                 streamsOnLine.length > 0
                 ? ( <div className='container'>

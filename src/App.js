@@ -13,13 +13,11 @@ const App = () =>
     const [ isReady, setIsReady ] = useState(false);
     const statusData = useSelector((state) => state.status.status);
     const notificationStatus = useSelector((state) => state.status.notification);
-   // const [ srcNotif, changeSrcNotif ] = useState('notification.png');
 
     useEffect(() => 
     {
         const loadInfos = async() =>
         {
-            console.log('pass');
             if (statusData !== 'NOT_LOG_ON_TWITCH')
             {
                 var token = localStorage.getItem('token');

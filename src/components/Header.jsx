@@ -10,8 +10,10 @@ const changeNotification = () =>
     if (notificationStatus.status.notification === true)
     {
         store.dispatch(changeNotificationStatus(false));
+        localStorage.setItem('notification', 'down');
     } else {
         store.dispatch(changeNotificationStatus(true));
+        localStorage.setItem('notification', 'up');
     }
 }
 

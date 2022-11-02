@@ -38,17 +38,12 @@ export const GetToken2 = async() =>
                 localStorage.setItem('token', token);
                 store.dispatch(updateStatus('LOG_ON_TWITCH'));
                 console.log(store.getState((state) => state.status.status))
+                if (localStorage.getItem('notification') == null)
+                {
+                    localStorage.setItem('notification', 'up');
+                }
             }
         });
-}
-
-export const getToken = async() =>
-{
-    let response  = await axios({
-        method: "post",
-        url : `${OAUTH_BASE_URL}/token?client_id=${CLIENT_ID}&client_secret=${secretId}&grant_type=client_credentials`,
-    })
-    return response.data.access_token;
 }
 
 const buildLivesInfosUrl = () =>

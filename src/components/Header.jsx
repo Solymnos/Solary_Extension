@@ -1,11 +1,34 @@
 import React from 'react';
+import { store } from '../app/store'
+import { changeNotificationStatus } from '../feature/statusSlice';
 
-const Header = () => {
+
+const changeNotification = () =>
+{
+    const notificationStatus = store.getState((state) => state.status.notification);
+    console.log(notificationStatus.status.notification);
+    if (notificationStatus.status.notification === true)
+    {
+        store.dispatch(changeNotificationStatus(false));
+    } else {
+        store.dispatch(changeNotificationStatus(true));
+    }
+}
+
+const Header = (props) => {
+    var imgNotif;
+    if (props.srcNotif === true)
+    {
+        imgNotif = 'notification.png';
+    } else {
+        imgNotif = 'no_notification.png';
+    }
+
     return (
         <div className= 'header'>
             <img className='headerLogo' src='Logo_Solary_White.png' alt='Logo Solary Blanc'></img>
             <img className='headerText' src='Logo_Solary_Text.png' alt='logo Textuel Solary'></img>
-            <img className='headerNotification' src='notification.png' alt=' cloche pour notification'></img>
+            <img onClick={() => changeNotification()} className='headerNotification' src={imgNotif} alt=' cloche pour notification'></img>
         </div>
     )
 }

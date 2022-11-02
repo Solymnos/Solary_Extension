@@ -12,11 +12,14 @@ const App = () =>
     const [ streamsOnLine, setStreamsOnline ] = useState([]);
     const [ isReady, setIsReady ] = useState(false);
     const statusData = useSelector((state) => state.status.status);
+    const notificationStatus = useSelector((state) => state.status.notification);
+   // const [ srcNotif, changeSrcNotif ] = useState('notification.png');
 
     useEffect(() => 
     {
         const loadInfos = async() =>
         {
+            console.log('pass');
             if (statusData !== 'NOT_LOG_ON_TWITCH')
             {
                 var token = localStorage.getItem('token');
@@ -33,7 +36,7 @@ const App = () =>
     {
         return (
             <div className='app'>
-                <Header />
+                <Header srcNotif={notificationStatus}/>
                 <LogginTwitch />
             </div>
         )
@@ -42,7 +45,7 @@ const App = () =>
     {
         return (
             <div className='app'>
-                <Header />
+                <Header srcNotif={notificationStatus}/>
                 <LoadingScreen />
             </div>
         )
@@ -50,7 +53,7 @@ const App = () =>
 
     return (
         <div className='app'>
-            <Header />
+            <Header srcNotif={notificationStatus}/>
             { 
                 streamsOnLine.length > 0
                 ? ( <div className='container'>

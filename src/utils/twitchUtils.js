@@ -5,8 +5,8 @@ import { v4 } from 'uuid';
 import { store } from '../app/store';
 import { updateStatus } from '../feature/statusSlice';
 
-const secretId = '';
 var listProfilesPics;
+var wasInLive = [];
 
 const getAuthURL = (securityPassword) => {
     let redirectUrl = chrome.identity.getRedirectURL('extension');
@@ -63,8 +63,21 @@ const buildLivesInfosUrl = () =>
     return url;
 }
 
-export const getLivesInfos = async(token) =>
+export const getStreamsOnlineCount = async() =>
 {
+    var token = localStorage.getItem('token');
+    let url = buildLivesInfosUrl();
+    let response = await axios({
+        method : 'get',
+        url : url,
+        headers: { 'Authorization' : `Bearer ${token}`, 'Client-Id' : CLIENT_ID }
+    });
+    return(response.data.data.length);
+}
+
+export const getLivesInfos = async() =>
+{
+    var token = localStorage.getItem('token');
     let url = buildLivesInfosUrl();
     let response = await axios({
         method : 'get',
@@ -91,11 +104,11 @@ const buildStreamersInfosUrl = (data) =>
     return url;
 }
 
-export const getStreamersInfos = async(token, data) =>
+export const getStreamersInfos = async(data) =>
 {
     listProfilesPics = [];
 
-    console.log(data);
+    var token = localStorage.getItem('token');
     let url = buildStreamersInfosUrl(data);
     let response = await axios({
         method : 'get',
@@ -113,4 +126,27 @@ export const getStreamerProfilePic = (stream) =>
 {
     const streamerData = listProfilesPics.find(element => element.id === stream.user_id);
     return streamerData.profilePic;
+}
+
+export const getNotificationFromStreamers = async() =>
+{
+    var token = localStorage.getItem('token');
+    let url = buildLivesInfosUrl();
+    var actualInLive = [];
+    var newInLive = [];
+    let response = await axios({
+        method : 'get',
+        url : url,
+        headers: { 'Authorization' : `Bearer ${token}`, 'Client-Id' : CLIENT_ID }
+    });
+    response.data.data.forEach(function(stream) {
+        const found = wasInLive.find(element => element === stream.id);
+        if (found === null)
+        {
+            newInLive += stream.id;
+        }
+        actualInLive += stream.id;
+    })
+    wasInLive = actualInLive;
+    return(newInLive);
 }

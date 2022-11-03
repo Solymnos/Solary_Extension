@@ -22,11 +22,19 @@ const App = () =>
 
     bc1a.onmessage = (event) =>
     {
-        console.log('update badge');
-        getStreamsOnlineCount().then((x) => {
-            console.log('found ' + x.toString() + ' on live');
-            chrome.action.setBadgeText({text: x.toString()});
-        });
+        console.log('on bc1a');
+        if (localStorage.getItem('token') === null) 
+        {
+            bc1b.postMessage('!');
+        } else {
+            bc1b.postMessage(localStorage.getItem('token'));
+            console.log('update badge');
+            getStreamsOnlineCount().then((x) => {
+                console.log('found ' + x.toString() + ' on live');
+                bc1b.postMessage(x.toString());
+                //chrome.action.setBadgeText({text: x.toString()});
+            });
+        }
     }
 
     bc2a.onmessage = (event) =>
@@ -49,9 +57,6 @@ const App = () =>
                 var streams = await getLivesInfos();
                 setStreamsOnline(streams);
                 await getStreamersInfos(streams);
-                getStreamsOnlineCount().then((x) => {
-                    bc1b.postMessage(x.toString());
-                });
                 setIsReady(true);
             }
         }

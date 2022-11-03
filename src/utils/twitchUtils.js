@@ -36,6 +36,7 @@ export const GetToken2 = async() =>
                 console.log('ERROR WITH TOKEN');
             } else {
                 localStorage.setItem('token', token);
+                chrome.storage.sync.set({token: token});
                 store.dispatch(updateStatus('LOG_ON_TWITCH'));
                 console.log(store.getState((state) => state.status.status))
                 if (localStorage.getItem('notification') == null)

@@ -15,6 +15,7 @@
   "permissions" : [
     "identity",
     "alarms",
-    "notifications"
+    "notifications",
+    "storage"
   ]
 }

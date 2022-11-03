@@ -67,3 +67,5 @@ chrome.alarms.onAlarm.addListener(() => {
     updateBadge();
     //bc2a.postMessage('GET_NOTIFICATION');
 })
+
+// TODO : VERIFICATION WITH A BAD TOKEN AND ADD REFRESH TOKEN, NOTIFICATION, AFF THE BADGE CORRECTLY

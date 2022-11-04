@@ -1,3 +1,4 @@
+/* global chrome*/
 import React from 'react';
 import { store } from '../app/store'
 import { changeNotificationStatus } from '../feature/statusSlice';
@@ -10,10 +11,10 @@ const changeNotification = () =>
     if (notificationStatus.status.notification === true)
     {
         store.dispatch(changeNotificationStatus(false));
-        localStorage.setItem('notification', 'down');
+        chrome.storage.sync.set({notification : 'down'});
     } else {
         store.dispatch(changeNotificationStatus(true));
-        localStorage.setItem('notification', 'up');
+        chrome.storage.sync.set({notification : 'up'});
     }
 }
 

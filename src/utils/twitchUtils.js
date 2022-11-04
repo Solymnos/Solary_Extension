@@ -4,6 +4,7 @@ import { CLIENT_ID, SCOPES, OAUTH_BASE_URL, API_BASE_URL, SOLARY_STREAMERS_ID } 
 import { v4 } from 'uuid';
 import { store } from '../app/store';
 import { updateStatus } from '../feature/statusSlice';
+import { getStorageValuePromise } from './chromeStorageUtils';
 
 var listProfilesPics;
 var wasInLive = [];
@@ -17,7 +18,7 @@ const getAuthURL = (securityPassword) => {
     return url;
 };
 
-export const GetToken2 = async() => 
+export const getToken = async() => 
 {
     const securityPassword = v4();
 
@@ -31,18 +32,21 @@ export const GetToken2 = async() =>
             const queryParams = new URLSearchParams(url.hash.substring(1));
             const token = queryParams.get('access_token');
             const state = queryParams.get('state');
+            console.log(token);
             if (!token || state !== securityPassword)
             {
                 console.log('ERROR WITH TOKEN');
             } else {
-                localStorage.setItem('token', token);
                 chrome.storage.sync.set({token: token});
                 store.dispatch(updateStatus('LOG_ON_TWITCH'));
                 console.log(store.getState((state) => state.status.status))
-                if (localStorage.getItem('notification') == null)
+                if (chrome.storage.sync.get(['notification'], function(result)
                 {
-                    localStorage.setItem('notification', 'up');
-                }
+                    if (result.notification === undefined)
+                    {
+                        chrome.storage.sync.set({notification : 'up'});
+                    }
+                }));
             }
         });
 }
@@ -64,21 +68,14 @@ const buildLivesInfosUrl = () =>
     return url;
 }
 
-export const getStreamsOnlineCount = async() =>
-{
-    var token = localStorage.getItem('token');
-    let url = buildLivesInfosUrl();
-    let response = await axios({
-        method : 'get',
-        url : url,
-        headers: { 'Authorization' : `Bearer ${token}`, 'Client-Id' : CLIENT_ID }
-    });
-    return(response.data.data.length);
-}
-
 export const getLivesInfos = async() =>
 {
-    var token = localStorage.getItem('token');
+    //var token;
+    //chrome.storage.sync.get(['token'], token);
+    var promise = await getStorageValuePromise('token');
+    var token = promise.token;
+    console.log(token);
+    console.log('try get lives infos with token ' + token);
     let url = buildLivesInfosUrl();
     let response = await axios({
         method : 'get',
@@ -109,7 +106,9 @@ export const getStreamersInfos = async(data) =>
 {
     listProfilesPics = [];
 
-    var token = localStorage.getItem('token');
+    var promise = await getStorageValuePromise('token');
+    var token = promise.token;
+    console.log(token);
     let url = buildStreamersInfosUrl(data);
     let response = await axios({
         method : 'get',
@@ -131,7 +130,9 @@ export const getStreamerProfilePic = (stream) =>
 
 export const getNotificationFromStreamers = async() =>
 {
-    var token = localStorage.getItem('token');
+    var promise = await getStorageValuePromise('token');
+    var token = promise.token;
+    console.log(token);
     let url = buildLivesInfosUrl();
     var actualInLive = [];
     var newInLive = [];

@@ -1,7 +1,7 @@
 /* global chrome*/
 import { useEffect, useState } from 'react';
 import './App.css';
-import { getLivesInfos, getStreamersInfos, getStreamerProfilePic, getStreamsOnlineCount, getNotificationFromStreamers } from './utils/twitchUtils';
+import { getLivesInfos, getStreamersInfos, getStreamerProfilePic } from './utils/twitchUtils';
 import { useSelector } from 'react-redux';
 import LoadingScreen from './components/LoadingScreen';
 import LogginTwitch from './components/LoggingTwitch';
@@ -14,39 +14,6 @@ const App = () =>
     const [ isReady, setIsReady ] = useState(false);
     const statusData = useSelector((state) => state.status.status);
     const notificationStatus = useSelector((state) => state.status.notification);
-
-    const bc1a = new BroadcastChannel('UPDATE_BADGE');
-    const bc1b = new BroadcastChannel('ANSWER_BADGE');
-    const bc2a = new BroadcastChannel('UPDATE_NOTIFICATION');
-    const bc2b = new BroadcastChannel('ANSWER_NOTIFICATION');
-
-    bc1a.onmessage = (event) =>
-    {
-        console.log('on bc1a');
-        if (localStorage.getItem('token') === null) 
-        {
-            bc1b.postMessage('!');
-        } else {
-            bc1b.postMessage(localStorage.getItem('token'));
-            console.log('update badge');
-            getStreamsOnlineCount().then((x) => {
-                console.log('found ' + x.toString() + ' on live');
-                bc1b.postMessage(x.toString());
-                //chrome.action.setBadgeText({text: x.toString()});
-            });
-        }
-    }
-
-    bc2a.onmessage = (event) =>
-    {
-        if (localStorage.getItem('notification') === 'up')
-        {
-            const newStream = getNotificationFromStreamers();
-            newStream.forEach((stream) => {
-                bc2b.postMessage(stream);
-            })
-        }
-    }
 
     useEffect(() => 
     {

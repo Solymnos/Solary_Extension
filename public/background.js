@@ -35,9 +35,6 @@ const getStreamsOnlineCount = async(token) =>
             }),
         });
     let json = await response.json();
-    let data = json.data;
-    console.log(data)
-    console.log(data.length);
     return(json.data.length);
 }
 
@@ -46,16 +43,11 @@ const updateBadge = async () =>
     console.log('update badge');
     chrome.storage.sync.get(['token'], async function(result)
     {
-        console.log(result.token);
         if(result.token === undefined)
         {
-            console.log('token is undefined');
             chrome.action.setBadgeText({text : '!'});
-        } else {+
-            console.log('find a token');
-            console.log(result.token);
-            x = await getStreamsOnlineCount(result.token);
-            console.log('receive ' + x.toString());
+        } else {
+            var x = await getStreamsOnlineCount(result.token);
             chrome.action.setBadgeText({text : x.toString()});
         }
     })
@@ -65,7 +57,6 @@ const updateBadge = async () =>
 chrome.alarms.create({periodInMinutes: 0.25});
 chrome.alarms.onAlarm.addListener(() => {
     updateBadge();
-    //bc2a.postMessage('GET_NOTIFICATION');
 })
 
-// TODO : VERIFICATION WITH A BAD TOKEN AND ADD REFRESH TOKEN, NOTIFICATION, AFF THE BADGE CORRECTLY
+// TODO : VERIFICATION WITH A BAD TOKEN AND ADD REFRESH TOKEN, NOTIFICATION

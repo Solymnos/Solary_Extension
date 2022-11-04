@@ -35,28 +35,28 @@ const getStreamsOnlineCount = async(token) =>
             }),
         });
     let json = await response.json();
-    console.log(json.data.lenght);
-    return(json.data.lenght);
+    let data = json.data;
+    console.log(data)
+    console.log(data.length);
+    return(json.data.length);
 }
 
 const updateBadge = async () =>
 {
     console.log('update badge');
-    chrome.storage.sync.get(['token'], function(result)
+    chrome.storage.sync.get(['token'], async function(result)
     {
         console.log(result.token);
         if(result.token === undefined)
         {
             console.log('token is undefined');
             chrome.action.setBadgeText({text : '!'});
-        } else {
+        } else {+
             console.log('find a token');
             console.log(result.token);
-            getStreamsOnlineCount(result.token).then((x) =>
-            {
-                console.log('receive ' + x.toString());
-                chrome.action.setBadgeText({text : x.toString()});
-            })
+            x = await getStreamsOnlineCount(result.token);
+            console.log('receive ' + x.toString());
+            chrome.action.setBadgeText({text : x.toString()});
         }
     })
     

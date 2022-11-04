@@ -35,8 +35,8 @@ const getStreamsOnlineCount = async(token) =>
             }),
         });
     let json = await response.json();
-    console.log(json.data.data.lenght);
-    return(5);
+    console.log(json.data.lenght);
+    return(json.data.lenght);
 }
 
 const updateBadge = async () =>
